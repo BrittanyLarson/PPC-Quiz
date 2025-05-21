@@ -289,9 +289,6 @@ form.addEventListener("submit", function (e) {
     if (answer && answer.value === "correct") score++;
   });
 
-  // Your existing code to show results here (if any)...
-
-  // New part: send data to Zapier webhook
   // Send data to Zapier webhook
   fetch("https://hooks.zapier.com/hooks/catch/16547500/27jnk9c/", {
     method: "POST",
