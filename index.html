@@ -340,7 +340,9 @@ form.addEventListener("submit", function (e) {
       resultSection.innerHTML = message;
       document.getElementById("video-container").style.display = "block";
       resultSection.style.display = "block";
-      });
+      })
+     .catch(error => console.error("Error sending data to Zapier:", error));
+   });
 
     updateProgress();
   </script>
