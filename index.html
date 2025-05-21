@@ -292,6 +292,7 @@ form.addEventListener("submit", function (e) {
   // Your existing code to show results here (if any)...
 
   // New part: send data to Zapier webhook
+  // Send data to Zapier webhook
   fetch("https://hooks.zapier.com/hooks/catch/16547500/27jnk9c/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -300,9 +301,6 @@ form.addEventListener("submit", function (e) {
   .then(response => {
     if (!response.ok) throw new Error("Network response was not ok");
     console.log("Data sent to Zapier");
-  })
-  .catch(error => console.error("Error sending data to Zapier:", error));
-});
 
       let message = "";
 
@@ -345,6 +343,7 @@ form.addEventListener("submit", function (e) {
       resultSection.innerHTML = message;
       document.getElementById("video-container").style.display = "block";
       resultSection.style.display = "block";
+      });
 
     updateProgress();
   </script>
