@@ -241,110 +241,110 @@
 
   </div>
 
-  <script>
-    let currentQuestion = 0;
-    const questions = document.querySelectorAll(".question");
-    const progressBar = document.getElementById("progress-bar");
-    const emailSection = document.querySelector(".email-capture");
-    const resultSection = document.getElementById("result");
-    const form = document.getElementById("quiz-form");
+<script>
+  let currentQuestion = 0;
+  const questions = document.querySelectorAll(".question");
+  const progressBar = document.getElementById("progress-bar");
+  const emailSection = document.querySelector(".email-capture");
+  const resultSection = document.getElementById("result");
+  const form = document.getElementById("quiz-form");
 
-   function startQuiz() {
-	document.getElementById("welcome-screen").classList.remove("active");
-	questions[0].classList.add("active");
-	updateProgress();
+  function startQuiz() {
+    document.getElementById("welcome-screen").classList.remove("active");
+    questions[0].classList.add("active");
+    updateProgress();
+  }
+
+  function nextQuestion() {
+    const question = questions[currentQuestion];
+    const selected = question.querySelector("input:checked");
+    if (!selected) return alert("Please select an answer.");
+
+    question.classList.remove("active");
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+      questions[currentQuestion].classList.add("active");
+      updateProgress();
+    } else {
+      emailSection.style.display = "block";
+      updateProgress();
+    }
+  }
+
+  function updateProgress() {
+    const total = questions.length + 1;
+    const percent = Math.min(((currentQuestion + 1) / total) * 100, 100);
+    progressBar.style.width = percent + "%";
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    if (!email) return alert("Please enter your email.");
+
+    let score = 0;
+    questions.forEach((q, i) => {
+      const answer = q.querySelector("input:checked");
+      if (answer && answer.value === "correct") score++;
+    });
+
+    // Send data to Zapier webhook (non-blocking)
+    fetch("https://hooks.zapier.com/hooks/catch/16547500/27jnk9c/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email, score: score })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      console.log("Data sent to Zapier");
+    })
+    .catch(error => console.error("Error sending data to Zapier:", error));
+
+    // Display the result regardless of Zapier
+    let message = "";
+
+    if (score <= 3) {
+      message = `
+        <h3>PPC Novice 🐣 | The Curious Starter | (IQ 80-89)</h3>
+        <p><b>Welcome to the world of Amazon PPC!</b></p>
+        <p>It can be overwhelming at first. <b>Start by mastering match types (Broad, Phrase, Exact) to better target your ads.</b></p>
+        <p><i>Bonus Tip: Check out Seller University videos on campaign setup — they’re super helpful.</i></p>
+        <p>Ready to build a strong PPC foundation?</p>
+      `;
+    } else if (score <= 6) {
+      message = `
+        <h3>PPC Competent 📘 | The Up-and-Comer | (IQ 90-99)</h3>
+        <p>Great job mastering the basics!</p>
+        <p><b>Dig deeper into keyword research using Amazon’s Search Term Report</b> to find high-converting, less competitive terms.</p>
+        <p><i>Bonus Tip: Use negative keywords to save budget and prune underperformers regularly.</i></p>
+        <p>Ready to elevate your campaigns from good to great?</p>
+      `;
+    } else if (score <= 8) {
+      message = `
+        <h3>PPC Strategist 🔍 | The Tactical Thinker | (IQ 100-109)</h3>
+        <p>Strategic thinking is key!</p>
+        <p><b>Focus on adjusting bids by placement</b> (Top of Search, Product Pages, Rest of Search) for better results.</p>
+        <p><i>Bonus Tip: Keep using negative keywords and prune low performers to maximize efficiency.</i></p>
+        <p>Ready to fine-tune your tactics?</p>
+      `;
+    } else {
+      message = `
+        <h3>PPC Prodigy 🧠 | The PPC Mastermind | (IQ 110-120)</h3>
+        <p>Well done! You clearly know your stuff.</p>
+        <p><b>Regularly audit your account</b> for scalability and efficiency — optimizing bids can save or boost money.</p>
+        <p><i>Bonus tip: Integrate PPC data with organic and external traffic for a full performance picture.</i></p>
+        <p>Hit a wall? We’ve helped many like you break through.</p>
+      `;
     }
 
-    function nextQuestion() {
-      const question = questions[currentQuestion];
-      const selected = question.querySelector("input:checked");
-      if (!selected) return alert("Please select an answer.");
-
-      question.classList.remove("active");
-      currentQuestion++;
-
-      if (currentQuestion < questions.length) {
-        questions[currentQuestion].classList.add("active");
-        updateProgress();
-      } else {
-        emailSection.style.display = "block";
-        updateProgress();
-      }
-    }
-
-    function updateProgress() {
-      const total = questions.length + 1;
-      const percent = Math.min(((currentQuestion + 1) / total) * 100, 100);
-      progressBar.style.width = percent + "%";
-    }
-
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-  const email = document.getElementById("email").value;
-  if (!email) return alert("Please enter your email.");
-
-  let score = 0;
-  questions.forEach((q, i) => {
-    const answer = q.querySelector("input:checked");
-    if (answer && answer.value === "correct") score++;
+    emailSection.style.display = "none";
+    resultSection.innerHTML = message;
+    document.getElementById("video-container").style.display = "block";
+    resultSection.style.display = "block";
   });
 
-  // Send data to Zapier webhook
-  fetch("https://hooks.zapier.com/hooks/catch/16547500/27jnk9c/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email: email, score: score })
-  })
-  .then(response => {
-    if (!response.ok) throw new Error("Network response was not ok");
-    console.log("Data sent to Zapier");
-
-      let message = "";
-
-      if (score <= 3) {
-  message = `
-    <h3>PPC Novice 🐣 | The Curious Starter | (IQ 80-89)</h3>
-    <p><b>Welcome to the world of Amazon PPC!</b></p>
-    <p> It can be overwhelming at first. <b>Start by mastering match types (Broad, Phrase, Exact) to better target your ads.</b> Even this one step can boost your campaigns.</p>
-    <p><i>Bonus Tip: Check out Seller University videos on campaign setup — they’re super helpful.</i></p>
-    <p>Ready to build a strong PPC foundation?</p>
-  `;
-} else if (score <= 6) {
-  message = `
-    <h3>PPC Competent 📘 | The Up-and-Comer | (IQ 90-99)</h3>
-    <p>Great job mastering the basics!</p>
-    <p>Now, <b>dig deeper into keyword research using Amazon’s Search Term Report</b> to find high-converting, less competitive terms.</p>
-    <p><i>Bonus Tip: Use negative keywords to save budget and prune underperformers regularly.</i></p>
-    <p>Ready to elevate your campaigns from good to great?</p>
-  `;
-} else if (score <= 8) {
-  message = `
-    <h3>PPC Strategist 🔍 | The Tactical Thinker | (IQ 100-109)</h3>
-    <p>Strategic thinking is key!</p>
-    <p><b>Focus on adjusting bids by placement</b> (Top of Search, Product Pages, Rest of Search) for better results.</p>
-    <p><i>Bonus Tip: Keep using negative keywords and prune low performers to maximize efficiency.</i></p>
-    <p>Ready to fine-tune your tactics?</p>
-  `;
-} else {
-  message = `
-    <h3>PPC Prodigy 🧠 | The PPC Mastermind | (IQ 110-120)</h3>
-    <p>Well done! You clearly know your stuff.</p>
-    <p><b>Regularly audit your account</b> for scalability and efficiency — optimizing bids can save or boost money.</p>
-    <p><i>Bonus tip: Integrate PPC data with organic and external traffic for a full performance picture.</i></p>
-    <p>Hit a wall? We’ve helped many like you break through.<p>
-  `;
-}
-
-
-      emailSection.style.display = "none";
-      resultSection.innerHTML = message;
-      document.getElementById("video-container").style.display = "block";
-      resultSection.style.display = "block";
-      })
-     .catch(error => console.error("Error sending data to Zapier:", error));
-   });
-
-    updateProgress();
-  </script>
+  updateProgress();
+</script>
 </body>
 </html>
