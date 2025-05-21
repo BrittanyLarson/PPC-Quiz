@@ -278,16 +278,31 @@
       progressBar.style.width = percent + "%";
     }
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const email = document.getElementById("email").value;
-      if (!email) return alert("Please enter your email.");
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  if (!email) return alert("Please enter your email.");
 
-      let score = 0;
-      questions.forEach((q, i) => {
-        const answer = q.querySelector("input:checked");
-        if (answer && answer.value === "correct") score++;
-      });
+  let score = 0;
+  questions.forEach((q, i) => {
+    const answer = q.querySelector("input:checked");
+    if (answer && answer.value === "correct") score++;
+  });
+
+  // Your existing code to show results here (if any)...
+
+  // New part: send data to Zapier webhook
+  fetch("https://hooks.zapier.com/hooks/catch/16547500/27jnk9c/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email, score: score })
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Network response was not ok");
+    console.log("Data sent to Zapier");
+  })
+  .catch(error => console.error("Error sending data to Zapier:", error));
+});
 
       let message = "";
 
