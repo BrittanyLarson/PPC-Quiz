@@ -289,21 +289,6 @@
       if (answer && answer.value === "correct") score++;
     });
 
-    // Send data to Zapier webhook (non-blocking)
-   fetch("https://hooks.zapier.com/hooks/catch/16547500/27jnk9c/", {
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({ email: email, score: score })
-   })
-    .then(response => {
-     console.log("Zapier responded:", response);
-     return response.text();
-   })
-   .then(data => console.log("Response body:", data))
-   .catch(error => console.error("Error sending data to Zapier:", error));
-
-
-    // Display the result regardless of Zapier
     let message = "";
 
     if (score <= 3) {
