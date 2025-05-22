@@ -282,7 +282,6 @@
   function sendToZapier(name, email, score) {
     fetch("https://hooks.zapier.com/hooks/catch/16547500/2j2k8s9/", { 
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, score })
     });
   }
