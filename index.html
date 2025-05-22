@@ -280,7 +280,7 @@
 
 //Zapier fetch function
   function sendToZapier(name, email, score) {
-    fetch("https://hooks.zapier.com/hooks/catch/16547500/2j2k8s9/", { 
+    fetch("https://webhook.site/2e5d7730-f911-4e05-ab4c-2504f5c5c646", { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, score })
