@@ -298,6 +298,9 @@
       const answer = q.querySelector("input:checked");
       if (answer && answer.value === "correct") score++;
     });
+	  
+   console.log("Name captured:", name);
+   console.log("Email captured:", email);
 
     sendToZapier(name, email, score); // ✅ Send to Zapier here
 
