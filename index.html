@@ -278,9 +278,19 @@
     progressBar.style.width = percent + "%";
   }
 
+//Zapier fetch function
+  function sendToZapier(name, email, score) {
+    fetch("https://hooks.zapier.com/hooks/catch/16547500/2j2k8s9/", { 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, score })
+    });
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    const email = document.getElementById("email").value;
+    const name = document.getElementById("Name").value.trim();
+    const email = document.getElementById("email").value.trim();
     if (!email) return alert("Please enter your email.");
 
     let score = 0;
@@ -288,6 +298,8 @@
       const answer = q.querySelector("input:checked");
       if (answer && answer.value === "correct") score++;
     });
+
+    sendToZapier(name, email, score); // ✅ Send to Zapier here
 
     let message = "";
 
