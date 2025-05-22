@@ -282,7 +282,11 @@
   function sendToZapier(name, email, score) {
     fetch("https://hooks.zapier.com/hooks/catch/16547500/2j2k8s9/", { 
       method: "POST",
-      body: JSON.stringify({ name, email, score })
+	 // Crucially, we change the Content-Type and send formData
+      headers: {
+         "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: formData // Send the URLSearchParams object
     });
   }
 
